@@ -1,103 +1,120 @@
-# CAR-AI
+# Multi-Task Learning Pipeline for Sequence-Based Prediction
 
-# Multi-Task Learning Pipeline for Protein Sequence Classification & Signal Prediction
-
-## Overview
-This project implements a multi-task deep learning pipeline that:
-- Classifies protein sequences into 4 biological classes (A, B, C, D)
-- Predicts three biochemical signal values (Signal-1, Signal-2, Signal-3)
-
-The model uses semantic embeddings generated from pretrained Word2Vec models and is trained on labeled biological data.
+This project implements a multi-task deep learning workflow for classifying biological sequences and predicting associated signal values. The process integrates sequence preprocessing, signal labeling, class assignment, feature extraction via pretrained Word2Vec, and training a joint neural network model.
 
 ---
 
-## Folder Structure
+## 📁 Project Structure
+
 ```
 SEQUENCES_WITH_SIGNALS/
-├── input/                      # Raw sequence data with signals
-├── Final Sequence Output/        # Signal-labeled data
-├── Final Sequence Output_with_classes/ # Data with class labels (A-D)
-├── Split Data/                # train/test splits + embeddings + saved model
-├── validation results/        # Predictions on new unseen sequences
+├── input/                         # Raw Excel files with sequences and signal values
+├── Final Sequence Output/        # Signal-labeled files
+├── Final Sequence Output_with_classes/  # Files with assigned class labels (A/B/C/D)
+├── Split Data/                   # Final train/test splits + embeddings
+│   ├── train_data.xlsx
+│   ├── test_data.xlsx
+│   ├── train_embeddings.npy
+│   └── test_embeddings.npy
+├── multi_task_model.h5           # Trained model
+├── measured_vs_predicted_signals.png    # Evaluation plots
+└── evaluation_metrics_with_weights.json # Metrics saved after training
 ```
 
 ---
 
-## Steps
+## 🧪 Signal Labeling Logic
 
-### 1. Signal Labeling
-**Script**: `label_signal_levels.py`
-- Assigns labels (low, middle, high, very high) to each of Signal-1, Signal-2, Signal-3
-- Saved to `Final Sequence Output/`
+### Signal-1:
+| Value Range | Label      |
+|-------------|------------|
+| < 0.5       | low        |
+| 0.5 – 1.0   | middle     |
+| 1.0 – 1.5   | high       |
+| > 1.5       | very high  |
 
-### 2. Class Label Assignment
-**Script**: `assign_class_labels.py`
-- Rule-based labeling to assign final class: A, B, C, or D based on signal labels
-- Output saved in `Final Sequence Output_with_classes/`
+### Signal-2 & Signal-3:
+| Value Range | Label      |
+|-------------|------------|
+| < 0.1       | low        |
+| 0.1 – 0.25  | middle     |
+| 0.25 – 0.5  | high       |
+| > 0.5       | very high  |
 
-### 3. Manual Class-Balanced Split
-**Script**: `manual_split.py`
-- Stratified sampling into train/test sets using manual class-based proportions
-- Files saved as:
-  - `Split Data/train_data.xlsx`
-  - `Split Data/test_data.xlsx`
+---
 
-### 4. Embedding Generation (Word2Vec)
-**Script**: `generate_embeddings.py`
-- Uses pretrained GoogleNews Word2Vec (via `kagglehub`)
-- Sequences are broken into 3-mers and embedded
-- Output:
-  - `train_embeddings.npy`
-  - `test_embeddings.npy`
+## 🏷️ Class Label Assignment (A, B, C, D)
 
-### 5. Model Training (Multi-task Learning)
-Two variations:
+Class labels are derived from the combination of signal labels:
 
-#### Basic Model:
-- Loss: `sparse_categorical_crossentropy` + `mse`
-- Saved to `multi_task_model_with_weights.h5`
+- `D`: All 3 are `very high`, or all `high`, or at least 1 is `very high`
+- `A`: All 3 are `low`
+- `B`: 2 `low` + 1 `middle` **or** 2 `middle` + 1 `low`
+- `C`: All `middle`, or if any signal is `high` (but not `very high`)
 
-#### Final Model:
-**Script**: `final_model_with_label_smoothing.py`
-- Loss: `categorical_crossentropy` with `label_smoothing=0.1` + `mse`
-- Optimizer: AdamW
-- Sample weights used only for class imbalance in classification task
-- Saved to: `multi_task_model.h5`
+**Examples:**
+| Signal-1_Label | Signal-2_Label | Signal-3_Label | Class |
+|----------------|----------------|----------------|-------|
+| low            | low            | low            | A     |
+| low            | middle         | low            | B     |
+| middle         | middle         | middle         | C     |
+| high           | middle         | middle         | C     |
+| very high      | middle         | middle         | D     |
 
-### 6. Evaluation
-**Output Metrics:**
+---
+
+## 🧬 Embedding Generation
+
+- **Pretrained Word2Vec** model from Google News was downloaded using `kagglehub`
+- Sequences were broken into overlapping k-mers (k=3)
+- Word2Vec embeddings were averaged per sequence
+
+---
+
+## 🤖 Model Architecture
+
+- **Inputs**: 300-dim embedding vectors
+- **Shared Layers**: Dense + BatchNorm + Dropout
+- **Output 1**: Classification into 4 classes using softmax
+- **Output 2**: Regression for 3 signal values using linear activation
+
+Trained using multi-task loss:
+```python
+loss = {
+  'class_output': 'categorical_crossentropy' with label smoothing,
+  'signal_output': 'mse'
+}
+```
+
+With:
+- Class weights (for handling imbalance)
+- EarlyStopping + ReduceLROnPlateau
+
+---
+
+## 📈 Evaluation & Visualization
+
 - Classification report (precision, recall, F1-score)
-- Mean squared error per signal
-- Plots:
-  - `combined_actual_vs_predicted_signals.png`
-  - `measured_vs_predicted_signals.png`
-- Metrics JSON:
-  - `evaluation_metrics_with_weights.json`
-
-### 7. Validation on Unlabeled Data
-**Script**: `validate_new_sequences.py`
-- Loads `.xlsx` files from `validation-data-with-no-values/`
-- Predicts class and signals
-- Saves prediction results per file + combined scatter plot:
-  - `combined_predicted_signals_scatter_with_legends.png`
+- MSE for each signal
+- Predicted vs. Actual plots for signals (saved as `.png`)
 
 ---
 
-## Requirements
-- Python 3.9+
-- TensorFlow / Keras
-- Gensim
-- Pandas, NumPy, Matplotlib
-- Pretrained Word2Vec from GoogleNews (download via `kagglehub`)
+## 💾 Final Outputs
+
+- Trained model: `multi_task_model.h5`
+- Metrics: `evaluation_metrics_with_weights.json`
+- Plots: `measured_vs_predicted_signals.png`
 
 ---
 
-## Author
-**Nisha Chaudhary**  
-Created as part of AI-based biological signal prediction and classification research.
+## 🔁 Next Steps
+
+- Deploy model for inference on new sequence data
+- Visualize signal profiles across predicted classes
+- Extend to larger or multiplexed datasets
 
 ---
 
-## License
-This code is for academic and research use only. Contact the author for licensing or reuse inquiries.
+For questions or contributions, contact **Nisha Chaudhary**.
 
