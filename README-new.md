@@ -2,17 +2,16 @@
 
 **CARMSeD** is a multi-task 1D‑CNN model that takes CAR-T primary sequences as input and simultaneously:
 
-- **Classifies** each sequence into one of three phenotypic classes: Low-, Medium-, or High-CARMSeD.
-- **Regresses** three continuous signal values (Signal‑1, Signal‑2, Signal‑3) in original units (µg ml⁻¹).  
+- **Classifies** each sequence into one of three phenotypic classes: Low, Medium, or High CARMSeD.
+- **Regresses** the signal value for the sequence.  
 
-This repository contains scripts for data preprocessing, model training, evaluation, plotting, and inference.
+This repository contains scripts for data preprocessing, model training, evaluation, and inference.
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 ```
 ├── train_carmsed.py       # Training pipeline (data load → model → fit → save)
-├── plot_results.py        # Standalone plotting of train/val metrics & results
 ├── predict_carmsed.py     # Batch inference & summary plots on new sequences
 │
 ├── model/                 # Outputs from training
@@ -27,12 +26,12 @@ This repository contains scripts for data preprocessing, model training, evaluat
 
 ---
 
-## 🚀 Installation
+## Installation
 
 1. **Clone repository**
    ```bash
-   git clone https://github.com/yourusername/CARMSeD.git
-   cd CARMSeD
+   git clone https://github.com/yourusername/CAR-AI.git
+   cd CAR-AI
    ```
 2. **Create Python environment** (recommended)
    ```bash
@@ -47,23 +46,17 @@ This repository contains scripts for data preprocessing, model training, evaluat
 
 ---
 
-## 📊 Data Preparation
-
-- Place your annotated Excel workbooks under:
-  ```
-  SEQUENCES_WITH_SIGNALS/results-april25/Final sequence output_with_classes/
-  ```
-  Each `.xlsx` must contain columns: `sequence`, `class` (L‑/M‑/H‑CARMSeD), and `Signal-1`, `Signal-2`, `Signal-3`.
+## Data Preparation
 
 - The **training script** will recursively load `.xlsx` files, clean missing labels, and drop stray temp workbooks.
 
 ---
 
-## 🏋️‍♂️ Model Training
+## Model Training
 
 Run:
 ```bash
-python train_carmsed.py
+python train.py
 ```
 This will:
 
@@ -84,14 +77,6 @@ This will:
 
 ---
 
-## 📈 Plotting Results
-
-Use the standalone `plot_results.py` to regenerate publication‑quality figures anytime:
-
-```bash
-python plot_results.py
-```
-
 It reads `model/data/train.csv` & `val.csv` and `model/model_files/history.pkl`, then saves PNG & SVG:
 
 - **Epoch curves**: classification accuracy & regression MSE
@@ -104,7 +89,7 @@ Plots are saved under `model/figs/`.
 
 ---
 
-## 🤖 Inference
+## Inference
 
 Process new sequences and obtain predictions + summary plots:
 
@@ -131,7 +116,7 @@ By default, it:
 
 ---
 
-## 🧪 Model Architecture
+## Model Architecture
 
 - **Embedding**: 20 + 1 tokens → 128 D  
 - **Conv layers**: 2×(Conv1D(256, k=5) → ReLU), plus MaxPool1D  
@@ -143,8 +128,4 @@ By default, it:
 - **Optimizer**: Adam
 
 ---
-
-## 📜 License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
