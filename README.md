@@ -97,22 +97,6 @@ loss_weights = {'class_out': 3.0, 'signal_out': 1.0}
 
 ---
 
-## 💾 Final Outputs
 
-- Trained model: `saved_model/`  
-- Signal scaler: `signal_scaler.pkl`  
-- Training history: `history.pkl`  
-- Predictions: `train.csv`, `val.csv`  
-- Plots: `figs/`  
-
----
-
-## 🔁 Next Steps
-
-- Inference on unseen CAR sequences  
-- Visual explanation of model attention (future work)  
-- Expansion to larger, modular CAR libraries  
-
----
 
 For questions or contributions, contact **Nisha Chaudhary**.
