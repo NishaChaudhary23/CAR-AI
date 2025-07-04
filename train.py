@@ -33,8 +33,7 @@ for dev in ('GPU', 'MPS'):
 
 # 1. Paths & constants
 BASE_OUT = pathlib.Path(
-    "/Users/nishachaudhary/Documents/others/TA/CAR-AI/"
-    "New-data-december/SEQUENCES_WITH_SIGNALS/results-april25/model"
+    "/path/to/results/model"
 )
 DATA_DIR  = BASE_OUT / 'data'
 MODEL_DIR = BASE_OUT / 'model_files'
@@ -42,9 +41,7 @@ for p in (DATA_DIR, MODEL_DIR):
     p.mkdir(parents=True, exist_ok=True)
 
 INPUT_FOLDER = (
-    "/Users/nishachaudhary/Documents/others/TA/CAR-AI/"
-    "New-data-december/SEQUENCES_WITH_SIGNALS/results-april25/"
-    "Final sequence output_with_classes/"
+    "/path/to/input/sequences/"
 )
 
 SEQ_COL, CLASS_COL = 'sequence', 'class'
