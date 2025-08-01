@@ -3,8 +3,8 @@ import os
 from collections import defaultdict
 
 # Define input and output root folder paths
-input_root = '/Users/nishachaudhary/Documents/others/TA/CAR-AI/New-data-december/SEQUENCES_WITH_SIGNALS/input/'
-output_root = '/Users/nishachaudhary/Documents/others/TA/CAR-AI/New-data-december/SEQUENCES_WITH_SIGNALS/results-april25/Final sequence output/'
+input_root = "raw_excel_data"
+output_root = "Final sequence output"
 
 print("=== Sequence Labeling Pipeline ===")
 print(f"Input root : {input_root}")
