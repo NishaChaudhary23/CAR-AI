@@ -9,7 +9,6 @@ Created on Wed Apr 23 11:57:09 2025
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-predict_carmsed.py
 
 Standalone inference script for Multi-Task CARMSeD model.
 Recursively processes each CSV/XLSX (including all sheets) in INPUT_FOLDER,
@@ -32,21 +31,10 @@ plt.rcParams['font.family'] = 'Arial'
 
 
 # 1) Configuration
-INPUT_FOLDER = pathlib.Path(
-    "/Users/nishachaudhary/Documents/others/TA/CAR-AI/"
-    "New-data-december/SEQUENCES_WITH_SIGNALS/results-april25/"
-    "Sequences-for-prediction"
-)
-OUTPUT_FOLDER = pathlib.Path(
-    "/Users/nishachaudhary/Documents/others/TA/CAR-AI/"
-    "New-data-december/SEQUENCES_WITH_SIGNALS/results-april25/"
-    "Predictions-output"
-)
-MODEL_DIR = pathlib.Path(
-    "/Users/nishachaudhary/Documents/others/TA/CAR-AI/"
-    "New-data-december/SEQUENCES_WITH_SIGNALS/results-april25/"
-    "model/model_files"
-)
+INPUT_FOLDER = pathlib.Path("Sequences-for-prediction")
+OUTPUT_FOLDER = pathlib.Path("Predictions-output")
+MODEL_DIR = pathlib.Path("model/model_files")
+
 OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
 FIG_DIR = OUTPUT_FOLDER / 'figs'
 FIG_DIR.mkdir(exist_ok=True)

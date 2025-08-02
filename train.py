@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-train_carmsed.py
+train.py
 
 Standalone training script for Multi-Task CARMSeD model (CPU-only).
 Loads Excel files, cleans & encodes data, builds & trains the model,
 then saves the trained model, scaler, history, and train/val CSVs.
 
 Usage:
-  python train_carmsed.py
+  python3 train.py
 """
 import os
 import glob
 import pathlib
 import warnings
 import joblib
-
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -33,7 +32,7 @@ for dev in ('GPU', 'MPS'):
 
 # 1. Paths & constants
 BASE_OUT = pathlib.Path(
-    "/path/to/results/model"
+    "model"
 )
 DATA_DIR  = BASE_OUT / 'data'
 MODEL_DIR = BASE_OUT / 'model_files'
@@ -41,7 +40,7 @@ for p in (DATA_DIR, MODEL_DIR):
     p.mkdir(parents=True, exist_ok=True)
 
 INPUT_FOLDER = (
-    "/path/to/input/sequences/"
+    "Final sequence output_with_classes"
 )
 
 SEQ_COL, CLASS_COL = 'sequence', 'class'
@@ -75,6 +74,10 @@ for fp in glob.glob(os.path.join(INPUT_FOLDER, '**', '*.xlsx'), recursive=True):
     dfs.append(dfn)
 if not dfs:
     raise RuntimeError('No valid Excel files found in INPUT_FOLDER')
+
+print("Files used for training:")
+for df in dfs:
+    print(" -", df['source_file'].iloc[0])
 
 data = pd.concat(dfs, ignore_index=True)
 print(f"Loaded {len(data)} sequences from {len(dfs)} files.")
