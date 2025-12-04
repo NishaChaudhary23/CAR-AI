@@ -1,12 +1,7 @@
-# Multi-Task Learning Pipeline for CAR Sequence-Based Signal Prediction
+# CARMSeD: Multi-Task Learning for Synergy Class and Signal Prediction
 
-This project implements a multi-task deep learning workflow (**CAR-AI**) for classifying CAR (Chimeric Antigen Receptor) sequences into functional synergy classes and predicting associated signal strengths. The system integrates sequence encoding, signal binning, class assignment, and a dual-head convolutional neural network for simultaneous classification and regression.
-
+This project implements the CARMSeD model pipeline described in the manuscript "AI-Guided CAR Designs and AKT3 Degradation Synergize to Enhance Bispecific and Trispecific CAR T Cell Persistence and Overcome Antigen Escape." for classifying CAR (Chimeric Antigen Receptor) sequences into functional synergy classes and predicting associated signal strengths. The system integrates sequence encoding, signal binning, class assignment, and a dual-head convolutional neural network for simultaneous classification and regression.
 ---
-
-This Code Ocean capsule supports the manuscript:
-
-"AI-Guided CAR Designs and AKT3 Degradation Synergize to Enhance Bispecific and Trispecific CAR T Cell Persistence and Overcome Antigen Escape"
 
 It provides an end-to-end reproducible workflow to:
 - Label CAR sequences with functional signal tiers
@@ -36,10 +31,15 @@ Folder Structure:
 
 CAR-AI/
 ├── raw_excel_data/                      # Sample Excel files for labeling
+
 ├── Final sequence output/              # Output from signal-labeling
+
 ├── Final sequence output_with_classes/ # Output from CAMSeD-labeling
+
 ├── Sequences-for-prediction/           # Excel files for inference
+
 ├── Predictions-output/                 # Predicted outputs and summary plots
+
 ├── model/                              # Trained model files, scalers, history
 
 ---
