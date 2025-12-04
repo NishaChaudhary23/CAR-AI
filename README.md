@@ -156,4 +156,4 @@ You are free to use, modify, and distribute it with proper attribution.
 Copyright (c) 2025 Nisha Chaudhary
 ---
 
-For questions or contributions, contact **Nisha Chaudhary**.
+For questions or contributions, contact **Nisha Chaudhary** nisha152810@st.jmi.ac.in.
